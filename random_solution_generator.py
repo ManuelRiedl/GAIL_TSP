@@ -9,7 +9,7 @@ import random
 def generate_solutions(cities, number_of_solutions):
     solutions = []
     for _ in range(number_of_solutions):
-        solution = list(range(len(cities)))
+        solution = list(cities)
         random.shuffle(solution)
         solutions.append(solution)
     return solutions

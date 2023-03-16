@@ -1,8 +1,6 @@
-# This is a sample Python script.
+import csv
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+from geopy.geocoders import Nominatim
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -11,6 +9,15 @@ def print_hi(name):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    cities = {}
+    geolocator = Nominatim(user_agent="Cities")
 
+    with open('./european_cities.csv', 'r') as csvfile:
+        csvreader = csv.reader(csvfile)
+        next(csvfile)
+        for row in csvreader:
+            name = row[0]
+            cities[name] = (row[1], row[2])
+
+print(cities['Paris'])
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

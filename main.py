@@ -2,7 +2,7 @@ from helper_functions import *
 
 CITIES_FILE = './european_cities.csv'
 NUMBER_OF_GENERATIONS = 1000
-NUMBER_OF_SOLUTIONS = 80
+NUMBER_OF_SOLUTIONS = 100
 NUMBER_OF_SELECTED_SOLUTIONS = 4
 MUTATION_RATE = 0.04  # 7%
 
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         print(f'Generation {i + 1}: {fitness(surviving_solutions[0], distance_matrix):.2f} km')
 
         # add new crossover solutions to the surviving solutions
-        while (len(surviving_solutions) < 100):
+        while (len(surviving_solutions) < NUMBER_OF_SOLUTIONS):
             sol1, sol2 = get_two_random_solutions(solutions)
             surviving_solutions.append(crossover(sol1, sol2))
         solutions = mutation(surviving_solutions, MUTATION_RATE)

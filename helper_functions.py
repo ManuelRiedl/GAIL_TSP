@@ -4,9 +4,8 @@ import numpy as np
 from geopy import distance
 
 
-
-def random_exponential_pdf(lam=8):
-    return min(int(np.random.exponential(1 / lam) * 100), 99)
+def random_exponential_pdf(lam, max_value):
+    return min(int(np.random.exponential(1 / lam) * 100), max_value)
 
 
 def load_cities(file):
@@ -29,9 +28,10 @@ def generate_random_solutions(cities, number_of_solutions):
 
 
 def get_two_random_solutions(solutions):
-    i_1 = random_exponential_pdf()
+
+    i_1 = random_exponential_pdf(lam=8, max_value=len(solutions) - 1)
     while True:
-        i_2 = random_exponential_pdf()
+        i_2 = random_exponential_pdf(lam=8, max_value=len(solutions) - 1)
         if i_2 != i_1:
             break
     return solutions[i_1], solutions[i_2]
@@ -49,7 +49,7 @@ def crossover(sol1, sol2):
     length = len(sol1)
     kept_cities = []
     new_cities_in_order = []
-    split_start = random.randint(0, 99)
+    split_start = random.randint(0, length - 1)
     split_end = split_start + random.randint(15, 25)
 
     # keep cities within split_start and split_end

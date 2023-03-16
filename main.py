@@ -1,7 +1,7 @@
 from helper_functions import *
 
 CITIES_FILE = './european_cities.csv'
-NUMBER_OF_GENERATIONS = 1000
+NUMBER_OF_GENERATIONS = 10000
 NUMBER_OF_SOLUTIONS = 100
 NUMBER_OF_SELECTED_SOLUTIONS = 4
 MUTATION_RATE = 0.04
@@ -39,5 +39,5 @@ if __name__ == '__main__':
             surviving_solutions.append(crossover(sol1, sol2))
         solutions = mutation(surviving_solutions, MUTATION_RATE)
 
-    print(f'Best solution: {best_solution}')
-    print(f'Range: {best_score}')
+    print(f'\nShortest route: {best_score:.2f} km')
+    print(best_solution)

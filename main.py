@@ -9,6 +9,7 @@ from mutation import *
 # from selection import *
 from crossover import *
 import numpy as np
+from display import *
 CITIES_FILE = './european_cities.csv'
 NUMBER_OF_SOLUTIONS = 80
 NUMBER_OF_SELECTED_SOLUTIONS = 10
@@ -69,5 +70,7 @@ for i in range(NUMBER_OF_GENERATIONS):
     # surviving_solutions.extend(crossover(surviving_solutions))
     mutated_solutions = mutation(surviving_solutions)
     solutions = mutated_solutions
+
 print('Best solution: {}'.format(solutions[0]))
 print('Range: {}'.format(fitness(solutions[0])))
+displaymap(solutions[0])

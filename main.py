@@ -85,7 +85,7 @@ for i in range(NUMBER_OF_GENERATIONS):
     while (len(surviving_solutions) < 100):
         sol1, sol2 = get_two_random_solutions(solutions)
         cross_solutions = crossover_of_two(sol1, sol2)
-        surviving_solutions.extend(cross_solutions)
+        surviving_solutions.append(cross_solutions)
 
     solutions = mutation(surviving_solutions)
 

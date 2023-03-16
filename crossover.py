@@ -1,28 +1,28 @@
 '''
 However, the TSP is unique in that we need to include all locations exactly one time.
 To abide by this rule, we can use a special breeding function called ordered crossover.
-In ordered crossover, we randomly select a subset of the first parent string.
+In ordered crossover, we randomly select a subset of the first parent string
+and then fill the remainder of the route with the genes from the second parent 
+in the order in which they appear, without duplicating any genes in the selected subset
+ from the first parent
 '''
 import random
 
 
-def crossover_of_two(sol_one, sol_two):
-    split_start = random.randint(0, 100)
-    split_count = random.randint(15, 25)
+def crossover_of_two(sol1, sol2):
+    length = len(sol1)
+    kept_cities = []
+    new_cities_in_order = []
+    split_start = random.randint(0, 99)
+    split_end = split_start + random.randint(15, 25)
 
-    new_sol_two = []
-    new_sol_one = []
-    new_sol_one.extend(sol_one[split_start:split_start + split_count])
-    new_sol_two.extend(sol_two[split_start:split_start + split_count])
+    # keep cities within split_start and split_end
+    for i in range(split_start, split_end):
+        kept_cities.append(sol1[i % length])
 
-    for two_elm in sol_two:
-        for one_elm in sol_one[split_start:split_start + split_count]:
-            if two_elm[0] == one_elm[0]:
-                new_sol_one.append(two_elm)
+    # fill rest of the cities in order
+    for item in sol2:
+        if item not in kept_cities:
+            new_cities_in_order.append(item)
 
-    for one_elm in sol_one:
-        for two_elm in sol_two[split_start:split_start + split_count]:
-            if one_elm[0] == two_elm[0]:
-                new_sol_two.append(one_elm)
-
-    return [new_sol_one, new_sol_two]
+    return kept_cities + new_cities_in_order

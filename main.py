@@ -11,8 +11,17 @@ NUMBER_OF_SELECTED_SOLUTIONS = 4  # should be even (as of now)
 NUMBER_OF_GENERATIONS = 300
 
 
-def random_exponential_pdf(lam=20):
-    return int(random.exponential(1 / lam) * 100)
+def get_two_random_solutions(solutions):
+    i_1 = random_exponential_pdf()
+    while True:
+        i_2 = random_exponential_pdf()
+        if i_2 != i_1:
+            break
+    return solutions[i_1], solutions[i_2]
+
+
+def random_exponential_pdf(lam=8):
+    return min(int(random.exponential(1 / lam) * 100), 99)
 
 
 def distance_between_two_cities(city1, city2):
@@ -73,17 +82,10 @@ for i in range(NUMBER_OF_GENERATIONS):
     surviving_solutions = solutions[:NUMBER_OF_SELECTED_SOLUTIONS]
     print(f'Current Best: {fitness(surviving_solutions[0]):.2f} km')
 
-    # todo beautify
     while (len(surviving_solutions) < 100):
-        i_1 = random_exponential_pdf()
-        while True:
-            i_2 = random_exponential_pdf()
-            if i_2 != i_1:
-                break
-
-        cross_solutions = crossover_of_two(solutions[i_1], solutions[i_2])
-        surviving_solutions.append(cross_solutions[0])
-        surviving_solutions.append(cross_solutions[1])
+        sol1, sol2 = get_two_random_solutions(solutions)
+        cross_solutions = crossover_of_two(sol1, sol2)
+        surviving_solutions.extend(cross_solutions)
 
     solutions = mutation(surviving_solutions)
 

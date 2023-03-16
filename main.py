@@ -4,7 +4,7 @@ CITIES_FILE = './european_cities.csv'
 NUMBER_OF_GENERATIONS = 1000
 NUMBER_OF_SOLUTIONS = 100
 NUMBER_OF_SELECTED_SOLUTIONS = 4
-MUTATION_RATE = 0.04  # 7%
+MUTATION_RATE = 0.04
 
 if __name__ == '__main__':
     cities = load_cities(CITIES_FILE)

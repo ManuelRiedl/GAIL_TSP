@@ -1,17 +1,30 @@
 import csv
-from geopy.geocoders import Nominatim
-import geopy.distance
-
-from fitness import *
 from random_solution_generator import *
 from mutation import *
 from crossover import *
-from display import *
+from numpy import random
+from geopy import distance
 
 CITIES_FILE = './european_cities.csv'
 NUMBER_OF_SOLUTIONS = 80
-NUMBER_OF_SELECTED_SOLUTIONS = 5
-NUMBER_OF_GENERATIONS = 20
+NUMBER_OF_SELECTED_SOLUTIONS = 4  # should be even (as of now)
+NUMBER_OF_GENERATIONS = 300
+
+
+def random_exponential_pdf(lam=20):
+    return int(random.exponential(1 / lam) * 100)
+
+
+def distance_between_two_cities(city1, city2):
+    return distance.geodesic((city1[1], city1[2]), (city2[1], city2[2])).km
+
+
+def fitness(solution):
+    score = 0
+    for i in range(len(solution) - 2):
+        score += distances[solution[i][0]][solution[i + 1][0]]
+    score += distance_between_two_cities(solution[-1], solution[0])
+    return score
 
 
 def load_cities():
@@ -44,25 +57,35 @@ repeat for X generations
     mutate each solution
 '''
 
+# compute distance matrix as lookup table
+distances = {}
+for city1 in cities:
+    # todo
+    distances[city1[0]] = 0
+    distances[city1[0]] = {}
+    for city2 in cities:
+        distances[city1[0]][city2[0]] = distance_between_two_cities(city1, city2)
+
 for i in range(NUMBER_OF_GENERATIONS):
     # sort by fitness
     print("Generation ", i)
     solutions = sorted(solutions, key=lambda x: fitness(x))
     surviving_solutions = solutions[:NUMBER_OF_SELECTED_SOLUTIONS]
-    print('Current Best: {}'.format(fitness(surviving_solutions[0])))
+    print(f'Current Best: {fitness(surviving_solutions[0]):.2f} km')
+
+    # todo beautify
     while (len(surviving_solutions) < 100):
-        i_1 = random.randint(0, NUMBER_OF_SELECTED_SOLUTIONS * 2)
+        i_1 = random_exponential_pdf()
         while True:
-            i_2 = random.randint(0, NUMBER_OF_SELECTED_SOLUTIONS * 2)
+            i_2 = random_exponential_pdf()
             if i_2 != i_1:
                 break
 
         cross_solutions = crossover_of_two(solutions[i_1], solutions[i_2])
         surviving_solutions.append(cross_solutions[0])
         surviving_solutions.append(cross_solutions[1])
-    mutated_solutions = mutation(surviving_solutions)
-    solutions = mutated_solutions
+
+    solutions = mutation(surviving_solutions)
 
 print('Best solution: {}'.format(solutions[0]))
 print('Range: {}'.format(fitness(solutions[0])))
-displaymap(solutions[0])

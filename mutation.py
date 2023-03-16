@@ -4,7 +4,7 @@
 '''
 import random
 
-MUTATION_RATE = 0.07    # 7%
+MUTATION_RATE = 0.04  # 7%
 
 
 def mutation(solutions):

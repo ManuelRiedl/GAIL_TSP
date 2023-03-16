@@ -1,7 +1,13 @@
 from helper_functions import *
 
+CITIES_FILE = './european_cities.csv'
+NUMBER_OF_GENERATIONS = 1000
+NUMBER_OF_SOLUTIONS = 80
+NUMBER_OF_SELECTED_SOLUTIONS = 4
+MUTATION_RATE = 0.04  # 7%
+
 if __name__ == '__main__':
-    cities = load_cities()
+    cities = load_cities(CITIES_FILE)
     solutions = generate_random_solutions(cities, NUMBER_OF_SOLUTIONS)
 
     best_solution = None
@@ -13,26 +19,25 @@ if __name__ == '__main__':
         distance_matrix[city1[0]] = 0
         distance_matrix[city1[0]] = {}
         for city2 in cities:
-            distance_matrix[city1[0]][city2[0]] = distance_between_two_cities(city1, city2)
+            distance_matrix[city1[0]][city2[0]] = distance.geodesic((city1[1], city1[2]), (city2[1], city2[2])).km
 
     # training loop
     for i in range(NUMBER_OF_GENERATIONS):
         solutions = sorted(solutions, key=lambda x: fitness(x, distance_matrix))
 
-        # store best solution
+        # store city names and score of best solution
         if fitness(solutions[0], distance_matrix) < best_score:
-            best_solution = solutions[0]
+            best_solution = [city[0] for city in solutions[0]]
             best_score = fitness(solutions[0], distance_matrix)
 
         surviving_solutions = solutions[:NUMBER_OF_SELECTED_SOLUTIONS]
-        print(f'Generation {i + 1}: {fitness(surviving_solutions[0]):.2f} km')
+        print(f'Generation {i + 1}: {fitness(surviving_solutions[0], distance_matrix):.2f} km')
 
         # add new crossover solutions to the surviving solutions
         while (len(surviving_solutions) < 100):
             sol1, sol2 = get_two_random_solutions(solutions)
-            cross_solutions = crossover(sol1, sol2)
-            surviving_solutions.append(cross_solutions)
-        solutions = mutation(surviving_solutions)
+            surviving_solutions.append(crossover(sol1, sol2))
+        solutions = mutation(surviving_solutions, MUTATION_RATE)
 
-    print('Best solution: {}'.format(solutions[0]))
-    print('Range: {}'.format(fitness(solutions[0])))
+    print(f'Best solution: {best_solution}')
+    print(f'Range: {best_score}')

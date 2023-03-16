@@ -3,25 +3,15 @@ import random
 import numpy as np
 from geopy import distance
 
-CITIES_FILE = './european_cities.csv'
-NUMBER_OF_SOLUTIONS = 80
-NUMBER_OF_SELECTED_SOLUTIONS = 4  # should be even (as of now)
-NUMBER_OF_GENERATIONS = 300
-
-MUTATION_RATE = 0.04  # 7%
 
 
 def random_exponential_pdf(lam=8):
     return min(int(np.random.exponential(1 / lam) * 100), 99)
 
 
-def distance_between_two_cities(city1, city2):
-    return distance.geodesic((city1[1], city1[2]), (city2[1], city2[2])).km
-
-
-def load_cities():
+def load_cities(file):
     cities = []
-    with open(CITIES_FILE, 'r') as csvfile:
+    with open(file, 'r') as csvfile:
         # skip header
         csvfile.readline()
         for row in csv.reader(csvfile, delimiter=','):
@@ -51,7 +41,7 @@ def fitness(solution, distance_matrix):
     score = 0
     for i in range(len(solution) - 2):
         score += distance_matrix[solution[i][0]][solution[i + 1][0]]
-    score += distance_between_two_cities(solution[-1], solution[0])
+    score += distance_matrix[solution[-1][0]][solution[0][0]]
     return score
 
 
@@ -74,8 +64,8 @@ def crossover(sol1, sol2):
     return kept_cities + new_cities_in_order
 
 
-def mutation(solutions):
-    max_number_of_swaps = int(len(solutions) * MUTATION_RATE)
+def mutation(solutions, mutation_rate):
+    max_number_of_swaps = int(len(solutions) * mutation_rate)
     for solution in solutions:
         number_of_swaps = random.randint(0, max_number_of_swaps)
         for _ in range(number_of_swaps):

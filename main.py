@@ -6,6 +6,7 @@ from fitness import *
 from random_solution_generator import *
 from mutation import *
 from crossover import *
+from display import *
 
 CITIES_FILE = './european_cities.csv'
 NUMBER_OF_SOLUTIONS = 80
@@ -61,5 +62,7 @@ for i in range(NUMBER_OF_GENERATIONS):
         surviving_solutions.append(cross_solutions[1])
     mutated_solutions = mutation(surviving_solutions)
     solutions = mutated_solutions
+
 print('Best solution: {}'.format(solutions[0]))
 print('Range: {}'.format(fitness(solutions[0])))
+displaymap(solutions[0])

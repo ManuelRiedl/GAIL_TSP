@@ -65,9 +65,10 @@ def crossover(sol1, sol2):
 
 
 def mutation(solutions, mutation_rate):
-    max_number_of_swaps = int(len(solutions) * mutation_rate)
+    max_number_of_swaps = max(int(len(solutions) * mutation_rate), 1)
     for solution in solutions:
-        number_of_swaps = random.randint(0, max_number_of_swaps)
+        number_of_swaps = random.randint(
+            0, int(len(solutions) * mutation_rate))
         for _ in range(number_of_swaps):
             index1 = random.randint(0, len(solution) - 1)
             index2 = (index1 + 1) % len(solution)

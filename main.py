@@ -2,9 +2,9 @@ from helper_functions import *
 
 CITIES_FILE = './european_cities.csv'
 NUMBER_OF_GENERATIONS = 1000
-NUMBER_OF_SOLUTIONS = 100
-NUMBER_OF_SELECTED_SOLUTIONS = 4
-MUTATION_RATE = 0.04
+NUMBER_OF_SOLUTIONS = 1000
+NUMBER_OF_SELECTED_SOLUTIONS = 80
+MUTATION_RATE = 0.01
 
 if __name__ == '__main__':
     cities = load_cities(CITIES_FILE)
@@ -19,11 +19,13 @@ if __name__ == '__main__':
         distance_matrix[city1[0]] = 0
         distance_matrix[city1[0]] = {}
         for city2 in cities:
-            distance_matrix[city1[0]][city2[0]] = distance.geodesic((city1[1], city1[2]), (city2[1], city2[2])).km
+            distance_matrix[city1[0]][city2[0]] = distance.geodesic(
+                (city1[1], city1[2]), (city2[1], city2[2])).km
 
     # training loop
     for i in range(NUMBER_OF_GENERATIONS):
-        solutions = sorted(solutions, key=lambda x: fitness(x, distance_matrix))
+        solutions = sorted(
+            solutions, key=lambda x: fitness(x, distance_matrix))
 
         # store city names and score of best solution
         if fitness(solutions[0], distance_matrix) < best_score:
@@ -31,7 +33,8 @@ if __name__ == '__main__':
             best_score = fitness(solutions[0], distance_matrix)
 
         surviving_solutions = solutions[:NUMBER_OF_SELECTED_SOLUTIONS]
-        print(f'\rGeneration {i + 1}: {fitness(surviving_solutions[0], distance_matrix):.2f} km', end='')
+        print(
+            f'\rGeneration {i + 1}: {fitness(surviving_solutions[0], distance_matrix):.2f} km', end='')
 
         # add new crossover solutions to the surviving solutions
         while (len(surviving_solutions) < NUMBER_OF_SOLUTIONS):

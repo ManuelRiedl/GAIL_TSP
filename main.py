@@ -1,10 +1,10 @@
 from helper_functions import *
+from geopy import distance
 
 CITIES_FILE = './european_cities.csv'
-NUMBER_OF_GENERATIONS = 600
+NUMBER_OF_GENERATIONS = 700
 NUMBER_OF_SOLUTIONS = 700
-NUMBER_OF_SELECTED_SOLUTIONS = 80
-MUTATION_RATE = 0.01
+NUMBER_OF_SELECTED_SOLUTIONS = 50
 
 if __name__ == '__main__':
     cities = load_cities(CITIES_FILE)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         while (len(surviving_solutions) < NUMBER_OF_SOLUTIONS):
             sol1, sol2 = get_two_random_solutions(surviving_solutions)
             surviving_solutions.append(crossover(sol1, sol2))
-        solutions = mutation(surviving_solutions, MUTATION_RATE)
+        solutions = mutation(surviving_solutions)
 
     print(f'\n\nShortest route: {best_score:.2f} km')
     print(best_solution)

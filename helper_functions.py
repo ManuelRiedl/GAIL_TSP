@@ -1,10 +1,9 @@
 import csv
 import random
 import numpy as np
-from geopy import distance
 
 
-def random_exponential_pdf(lam, max_value):
+def random_exponential_pdf(max_value, lam=5):
     return min(int(np.random.exponential(1 / lam) * 100), max_value)
 
 
@@ -29,9 +28,9 @@ def generate_random_solutions(cities, number_of_solutions):
 
 def get_two_random_solutions(solutions):
 
-    i_1 = random_exponential_pdf(lam=8, max_value=len(solutions) - 1)
+    i_1 = random_exponential_pdf(max_value=len(solutions) - 1)
     while True:
-        i_2 = random_exponential_pdf(lam=8, max_value=len(solutions) - 1)
+        i_2 = random_exponential_pdf(max_value=len(solutions) - 1)
         if i_2 != i_1:
             break
     return solutions[i_1], solutions[i_2]
@@ -64,14 +63,10 @@ def crossover(sol1, sol2):
     return kept_cities + new_cities_in_order
 
 
-def mutation(solutions, mutation_rate):
-    max_number_of_swaps = max(int(len(solutions) * mutation_rate), 1)
+def mutation(solutions):
     for solution in solutions:
-        number_of_swaps = random.randint(
-            0, int(len(solutions) * mutation_rate))
-        for _ in range(number_of_swaps):
-            index1 = random.randint(0, len(solution) - 1)
-            index2 = (index1 + 1) % len(solution)
-            solution[index1], solution[index2] = solution[index2], solution[index1]
+        index1 = random.randint(0, len(solution) - 1)
+        index2 = (index1 + 1) % len(solution)
+        solution[index1], solution[index2] = solution[index2], solution[index1]
 
     return solutions
